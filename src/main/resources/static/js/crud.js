@@ -96,8 +96,8 @@ function getBooks() {
                 '</td>'+'</tr>');
             })
         },
-        error: function (error) {
-            console.log(error);
+        error: function (data, error) {
+            alert(error);
         }
     })
 
@@ -122,8 +122,8 @@ function saveBook() {
             reset();
             $("#myModal").modal('hide');
         },
-        error: function (error) {
-            console.log(error);
+        error: function (data, error) {
+            alert(error);
         }
     })
 
@@ -149,22 +149,12 @@ function updateBook() {
             getBooks();
             $("#myModal").modal('hide');
         },
-        error: function (error) {
-            console.log(error);
+        error: function (data, error) {
+            alert(error);
         }
     })
 
 }
-
-function reset() {
-    $('#bookId').val('');
-    $('#book-name').val('');
-    $('#publish-date').val('');
-    $('#book-price').val('');
-    $('#book-type').val('');
-    $('#book-isbn-number').val('');
-}
-
 
 function deleteBook() {
     var bookId = $('#bookId').val();
@@ -175,8 +165,17 @@ function deleteBook() {
             $("#smallModal").modal('hide');
             getBooks();
         },
-        error: function (error) {
-            console.log(error);
+        error: function (data, error) {
+            alert(error);
         }
     })
+}
+
+function reset() {
+    $('#bookId').val('');
+    $('#book-name').val('');
+    $('#publish-date').val('');
+    $('#book-price').val('');
+    $('#book-type').val('');
+    $('#book-isbn-number').val('');
 }

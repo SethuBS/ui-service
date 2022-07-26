@@ -64,6 +64,9 @@ public class BookController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(@RequestBody Book book) {
+        if(book.getPrice() == null){book.setPrice(0d);}
+        if(book.getISBNNumber()==null){book.setISBNNumber(0L);}
+        if(book.getPublishDate()==null){book.setPublishDate(new Date());}
         String date = dateFormat.format(book.getPublishDate());
         book.setPublishDate(new Date(date));
         Response response = webTarget.request().post(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
@@ -73,6 +76,9 @@ public class BookController {
     @PutMapping({"/{bookId}"})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateBook(@PathVariable("bookId") Integer bookId, @RequestBody  Book book) {
+        if(book.getPrice() == null){book.setPrice(0d);}
+        if(book.getISBNNumber()==null){book.setISBNNumber(0L);}
+        if(book.getPublishDate()==null){book.setPublishDate(new Date());}
         String date = dateFormat.format(book.getPublishDate());
         book.setPublishDate(new Date(date));
         Response response = webTarget.path(String.valueOf(bookId.toString())).request().put(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
