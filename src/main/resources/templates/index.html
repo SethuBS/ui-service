@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book collection</title>
+
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/adminlte.min.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.theme.min.css}">
+    <link rel="stylesheet" th:href="@{/css/daterangepicker.css}">
+
+   <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+    <script th:src="@{/js/daterangepicker.js}"></script>
+
+    <!-- Bootstrap 4 -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script th:src="@{/js/adminlte.min.js}"></script>
+
+    <script th:src="@{/js/crud.js}"></script>
+
+
+</head>
+<body>
+<!-- Modal Start -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-tittle" id="bookModalLabel">Save Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">*</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="bookId" name="bookId">
+                    <div class="form-group">
+                        <label for="book-name" class="col-form-label">Book Name</label>
+                        <input type="text" class="from-control" id="book-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="publish-date" class="col-form-label">Book Published Date</label>
+                        <input type="text" class="from-control"  id="publish-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-price" class="col-form-label">Book Price (ZAR)</label>
+                        <input type="number" class="from-control" id="book-price" name="book-price">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-type" class="col-form-label">Book Type</label>
+                        <select name="cars" class="from-control" id="book-type">
+                            <option value="eBOOK">eBOOK</option>
+                            <option value="HARD_COVER">Hard Cover</option>
+                            <option value="SOFT_COVER">Soft Cover</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-isbn-number" class="col-form-label">Book ISBN Number</label>
+                        <input type="number" class="from-control" id="book-isbn-number">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="btn-reset">Reset</button>
+                <button type="button" class="btn btn-primary" id="btn-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Modal End -->
+
+<!-- Modal Delete -->
+<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete Book Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">*</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this book ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteBook()"><ion-icone name="checkmark-outline"></ion-icone>Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><ion-icon name="close-circle-outline"></ion-icon>No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Delete -->
+<!-- Content Wrapper. Contains page content -->
+<div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Book List</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div align="right">
+                                <button type="button" id="add_button" data-toggle="modal" data-target="#myModal" class="btn btn-success"><ion-icon name="add-outline"></ion-icon>Add Book</button>
+                            </div>
+                            <br>
+                            <table class="table table-bordered" id="tblBook">
+                                <thead>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Book Name</th>
+                                    <th>Book Publish Date</th>
+                                    <th>Book Price</th>
+                                    <th>Book Type</th>
+                                    <th>Book ISBN Number</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- /.card -->
+</body>
+</html>
