@@ -12,6 +12,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
@@ -37,27 +38,18 @@ public class BookController {
     @GetMapping
     @Produces(MediaType.APPLICATION_JSON)
     public List<Book> getBooks() throws ParseException {
-
         List<Book> books = new ArrayList<>();
-        String bookJson = webTarget.request().get(String.class);
-        JSONArray jsonArray = new JSONArray(bookJson);
-
-        for (int index = 0; index < jsonArray.length(); index++) {
-
-            JSONObject jsonObject = jsonArray.getJSONObject(index);
-            Book book = new Book();
-            book.setId(jsonObject.getInt("id"));
-            book.setName(jsonObject.getString("name"));
-            String dateStr = jsonObject.getString("publishDate");
-            Date date = dateFormat.parse(dateStr);
-            book.setPublishDate(date);
-            book.setPrice(jsonObject.getDouble("price"));
-            book.setBookType(jsonObject.getString("bookType"));
-            book.setISBNNumber(jsonObject.getLong("isbnnumber"));
-            books.add(book);
-        }
-
-        return books;
+        try {
+           List<Book> bookList = webTarget.request(MediaType.APPLICATION_JSON).get(new GenericType<List<Book>>() {});
+           for(Book book: bookList){
+               books.add(book);
+           }
+           return books;
+       }catch (Exception e){
+           System.out.println(e.getMessage());
+       } finally {
+           return books;
+       }
     }
 
     @PostMapping
