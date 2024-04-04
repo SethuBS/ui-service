@@ -2,11 +2,11 @@ package com.payu.ui.controller;
 
 
 import com.payu.ui.model.Book;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,13 +26,17 @@ import java.util.List;
 @RequestMapping("/ui-service/api/v1/book")
 public class BookController {
 
+    @Value("${service.url}")
+    private String serviceUrl;
+    private WebTarget webTarget;
 
+    @PostConstruct
+    private void initialize() {
+        Client client = ClientBuilder.newClient();
+        this.webTarget = client.target(serviceUrl);
+    }
 
-    private static String REST_URI = "http://localhost:9000/management-service/api/v1/book/";
-    private Client client = ClientBuilder.newClient();
-    private WebTarget webTarget = client.target(REST_URI);
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @GetMapping
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,15 +44,12 @@ public class BookController {
         List<Book> books = new ArrayList<>();
         try {
            List<Book> bookList = webTarget.request(MediaType.APPLICATION_JSON).get(new GenericType<List<Book>>() {});
-           for(Book book: bookList){
-               books.add(book);
-           }
+            books.addAll(bookList);
            return books;
        }catch (Exception e){
            System.out.println(e.getMessage());
-       } finally {
-           return books;
        }
+        return books;
     }
 
     @PostMapping
@@ -61,8 +61,7 @@ public class BookController {
         if(book.getPublishDate()==null){book.setPublishDate(new Date());}
         String date = dateFormat.format(book.getPublishDate());
         book.setPublishDate(new Date(date));
-        Response response = webTarget.request().post(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
-        return response;
+        return webTarget.request().post(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
     }
 
     @PutMapping({"/{bookId}"})
@@ -73,14 +72,14 @@ public class BookController {
         if(book.getPublishDate()==null){book.setPublishDate(new Date());}
         String date = dateFormat.format(book.getPublishDate());
         book.setPublishDate(new Date(date));
-        Response response = webTarget.path(String.valueOf(bookId.toString())).request().put(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
-        return response;
+        return webTarget.path(String.valueOf(bookId.toString())).request().put(Entity.entity(book, MediaType.APPLICATION_JSON), Response.class);
     }
 
     @DeleteMapping({"/{bookId}"})
     public Response deleteBook(@PathVariable("bookId") Integer bookId){
-        Response response = webTarget.path(bookId.toString()).request().delete();
+        Response response;
+        response = webTarget.path(bookId.toString()).request().delete();
         return response;
     }
-
+    
 }
