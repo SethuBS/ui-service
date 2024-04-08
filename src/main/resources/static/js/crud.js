@@ -1,7 +1,15 @@
 var baseUrl = "http://localhost:8000";
 var resourceLocation = "/ui-service/api/v1/book/";
 
+// Show loader
+function showLoader() {
+  document.getElementById("loader").style.display = "block";
+}
 
+// Hide loader
+function hideLoader() {
+  document.getElementById("loader").style.display = "none";
+}
 
 $( document ).ready(function() {
     console.log("Ready...");
@@ -70,10 +78,10 @@ $( document ).ready(function() {
             dateFormat: 'dd/mm/yy'
         });
     });
-
 });
 
 function getBooks() {
+    showLoader();
     $.ajax({
         url: baseUrl+resourceLocation,
         type: 'GET',
@@ -95,8 +103,10 @@ function getBooks() {
                     +'<a   class="btn btn-danger ml-2"><ion-icon name="trash-outline"></ion-icon>Delete</a>'+
                 '</td>'+'</tr>');
             })
+            hideLoader();
         },
         error: function (data, error) {
+        hideLoader();
             alert(error);
         }
     })

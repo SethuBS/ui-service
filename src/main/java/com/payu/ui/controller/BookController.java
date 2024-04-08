@@ -81,5 +81,5 @@ public class BookController {
         response = webTarget.path(bookId.toString()).request().delete();
         return response;
     }
-    
+
 }
