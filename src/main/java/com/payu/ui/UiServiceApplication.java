@@ -2,13 +2,10 @@ package com.payu.ui;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-
 
 import java.io.IOException;
 
-@SpringBootApplication
-@ComponentScan(basePackageClasses = com.payu.ui.controller.EntryPointController.class)
+@SpringBootApplication(scanBasePackages = "com.payu.ui")
 public class UiServiceApplication {
 
 	public static void main(String[] args) throws IOException {
@@ -17,8 +14,11 @@ public class UiServiceApplication {
 	}
 
 	private static void openHomePage() throws IOException {
-		Runtime rt = Runtime.getRuntime();
-		rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://localhost:8000/books/");
-	}
+        String url = "http://localhost:8000/books/";
+        String chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+
+        Runtime rt = Runtime.getRuntime();
+        rt.exec(new String[]{chromePath, url});
+    }
 
 }

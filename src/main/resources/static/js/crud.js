@@ -95,7 +95,7 @@ function getBooks() {
                 tableBody.append('<tr><td>'+element.id+'</td>' +
                     '<td>'+element.name+'</td>' +
                     '<td>'+element.publishDate+'</td>' +
-                    '<td>'+parseFloat(element.price)+'</td>' +
+                    '<td>' + "R" + parseFloat(element.price) + '</td>' +
                     '<td>'+element.bookType+'</td>'+
                     '<td>'+element.isbnnumber+'</td>' +
                         '<td>'

@@ -1,33 +1,29 @@
-package com.payu.ui.model;
+package com.payu.ui.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
+import java.time.LocalDate;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@XmlRootElement
-public class Book {
+public class BookResponseDTO {
+    private Integer id;
 
-    private   Integer id;
+    private String name;
 
-    private   String name;
+    @JsonProperty("ISBNNumber")
+    private Long ISBNNumber;
 
-    private  Long ISBNNumber;
+    private LocalDate publishDate;
 
-    @JsonFormat(pattern="dd/MM/yyyy")
-    private  Date publishDate;
-
-    private  Double price;
+    private Double price;
 
     private String bookType;
 
-    public Book(){
+    public BookResponseDTO() {
 
     }
 
-    public Book(String name, Long ISBNNumber, Date publishDate, Double price, String bookType) {
+    public BookResponseDTO(Integer id, String name, Long ISBNNumber, LocalDate publishDate, Double price, String bookType) {
+        this.id = id;
         this.name = name;
         this.ISBNNumber = ISBNNumber;
         this.publishDate = publishDate;
@@ -60,11 +56,11 @@ public class Book {
         this.ISBNNumber = ISBNNumber;
     }
 
-    public Date getPublishDate() {
+    public LocalDate getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(Date publishDate) {
+    public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
